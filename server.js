@@ -1,6 +1,8 @@
 const express = require("express");
-const { UserRouteHandlers, adminAuth } = require("./middlewares/RouteHandlers");
+require("./config/mongoDb");
+const connectDb = 
 
+const { UserRouteHandlers, adminAuth } = require("./middlewares/RouteHandlers");
 const app = express();
 const PORT = 7000;
 
