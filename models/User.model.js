@@ -1,6 +1,11 @@
 const { Schema, model } = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const userScehema = new Schema({
+const SECRET_KEY = "DEV@Tinder$790";
+
+const userSchema = new Schema({
     firstName: {
         type: String,
         required: true,
@@ -31,13 +36,48 @@ const userScehema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error("Password is not strong")
+            }
+        }
+    },
+    photoUrl: {
+        type: String,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Photo Url is not Valid")
+            }
+        }
     },
     skills: {
         type: [String]
     }
 }, { timestamps: true })
 
-const UserModel = model("User",userScehema);
+userSchema.methods.getJWT = async function () {
+    const user = this;
+  
+    const token = await jwt.sign({ _id: user._id }, SECRET_KEY, {
+      expiresIn: "7d",
+    });
+  
+    return token;
+};
+  
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+    const user = this;
+    const passwordHash = user.password;
+  
+    const isPasswordValid = await bcrypt.compare(
+      passwordInputByUser,
+      passwordHash
+    );
+  
+    return isPasswordValid;
+};
+
+const UserModel = model("User",userSchema);
 
 module.exports = UserModel;

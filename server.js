@@ -1,6 +1,6 @@
 const express = require("express");
 require("./config/mongoDb");
-const connectDb = 
+const { Server } = require("socket.io");
 
 const { UserRouteHandlers, adminAuth } = require("./middlewares/RouteHandlers");
 const app = express();
@@ -41,6 +41,34 @@ app.use("/", (err,req,res,next)=>{
     }
 })
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log("Listening on Port: ", PORT);
 });
+
+const io = new Server(server, {
+    cors: {
+      origin: "*",
+    },
+});
+
+let documentContent = "";
+
+io.on("connection", (socket)=>{
+    console.log("User connected:", socket.id);
+
+    // Send current document
+    socket.emit("load-document", documentContent);
+
+    // Receive changes
+    socket.on("save-changes", (data) => {
+        console.log(data)
+        documentContent = data;
+        socket.broadcast.emit("receive-changes", data);
+    });
+
+    // close socket
+    socket.on("disconnect", () => {
+        console.log("Disconnected socket", socket.id)
+    })
+});
+
