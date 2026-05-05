@@ -46,7 +46,7 @@ const userSchema = new Schema({
     photoUrl: {
         type: String,
         validate(value){
-            if(!validator.isEmail(value)){
+            if(!validator.isURL(value)){
                 throw new Error("Photo Url is not Valid")
             }
         }

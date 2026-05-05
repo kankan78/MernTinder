@@ -3,7 +3,6 @@ class BaseHandlers {
         this.data = "Called"
     }
 }
-
 class UserRouteHandlers extends BaseHandlers {
     constructor() {
         super(); // Required to initialize 'this' from the parent class

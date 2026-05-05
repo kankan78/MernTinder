@@ -2,7 +2,8 @@ const authRouter = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/User.model");
-const validateUserData = require("../utils/validations");
+const { validateUserData } = require("../utils/validations");
+const authMiddleware = require("../middlewares/auth");
 
 const SECRET_KEY = "DEV@Tinder$790";
 
@@ -64,6 +65,19 @@ authRouter.post("/login", async (req, res) => {
     }
 
   } catch (e) {
+    res.status(500).send("Invalid Credentials")
+  }
+});
+
+//Login
+authRouter.post("/logout", authMiddleware, async (req, res) => {
+  try {
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+    });
+
+    res.status(200).send("Logout Successfully!")
+  } catch (error) {
     res.status(500).send("Invalid Credentials")
   }
 });

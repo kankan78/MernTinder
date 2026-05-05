@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --inspect server/index.js",
+    "clinic-dev": "clinic doctor -- node server/index.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +24,7 @@
     "validator": "^13.15.35"
   },
   "devDependencies": {
+    "clinic": "^10.1.1",
     "nodemon": "^3.1.14"
   }
 }

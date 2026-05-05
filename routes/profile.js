@@ -1,9 +1,10 @@
 const authMiddleware = require("../middlewares/auth");
 const UserModel = require("../models/User.model");
+const { validateProfileData } = require("../utils/validations");
 const router = require("express").Router();
 
 /**Get User data by email */
-router.post("/user", authMiddleware, async (req, res) => {
+router.get("/get", authMiddleware, async (req, res) => {
     // const { id,email } = req.body;
 
     try {
@@ -24,40 +25,42 @@ router.post("/user", authMiddleware, async (req, res) => {
 
 
 /**Api to Update a patch */
-router.patch("/edit", async (req, res) => {
-    const { userId, skills } = req.body;
-    const data = req.body;
+router.patch("/edit", authMiddleware, async (req, res) => {
+    // const { userId, skills } = req.body;
+    const fields = req.body;
+    const loggedInUser = req.user;
 
     try {
-        const NotAllowedUpdates = ["email", "firstname"];
-        const noUpdateAllowed = Object.keys(req.body).some((key) => {
-            return NotAllowedUpdates.includes(key)
-        });
+        if(!loggedInUser) throw new Error("User not defined")
+        validateProfileData(req);
 
-        if (noUpdateAllowed) {
-            throw new Error("Update Not Allowed ! Not allowed to update email,firstname");
+        // const result = await UserModel.findByIdAndUpdate({ _id: userId }, data, { returnDocument: "after" });
+        // if (result) res.send(result);
+        // else res.status(404).send("User not found");
+
+        for (let key in fields) {
+            loggedInUser[key] = fields[key];
         }
 
-        if (skills?.length > 10) {
-            throw new Error("Update Not Allowed ! Skills limit 10");
-        }
+        await loggedInUser.save();
 
-        const result = await UserModel.findByIdAndUpdate({ _id: userId }, data, { returnDocument: "after" });
-        if (result) res.send(result);
-        else res.status(404).send("User not found");
+        res.json({ message: "User saved successFully", data: loggedInUser })
     } catch (err) {
-        res.status(500).send("Error in Updating to DB " + err.message);
+        res.status(500).send("Error in Updating to DB! " + err.message);
     }
 })
 
 
 /**Api to Delete user by Id */
-router.delete("/user", async (req, res) => {
-    const { userId } = req.body;
+router.delete("/delete", authMiddleware , async (req, res) => {
+    const loggedInUser = req.user;
     try {
-        const result = await UserModel.findByIdAndDelete({ _id: userId });
-        if (result) res.send("Deleted user");
-        else res.status(404).send("User not found");
+        if(!loggedInUser) throw new Error("User not defined")
+
+        loggedInUser.delete();
+        // const result = await UserModel.findByIdAndDelete({ _id: userId });
+        // if (result) res.send("Deleted user");
+        // else res.status(404).send("User not found");
     } catch (err) {
         res.status(500).send("Error in Deleting to DB");
     }

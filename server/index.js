@@ -13,15 +13,17 @@ const authMiddleware = require("../middlewares/auth");
 const authRouter = require("../routes/auth");
 const connectionsRouter = require("../routes/connections");
 const profileRouter = require("../routes/profile");
+const userRouter = require("../routes/users");
 
 app.use(express.json());
 app.use(cookieParser())
 // app.use(cors())
 // app.use(authMiddleware)
 
-app.use("/",authRouter);
-app.use("/",connectionsRouter);
+app.use("/request",connectionsRouter);
 app.use("/profile",profileRouter);
+app.use("/auth",authRouter);
+app.use("/user",userRouter);
 
 /**Get All user */
 app.get("/user/all", authMiddleware,async (req,res)=>{

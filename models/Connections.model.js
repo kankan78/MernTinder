@@ -15,12 +15,20 @@ const connectionSchema = new Schema({
         type: String,
         required: true,
         enum: {
-            values:["accepted","rejected","ignore","interested"],
+            values: ["accepted", "rejected", "ignore", "interested"],
             message: `{Value} is incorrect status type`
         }
     }
-},{timestamps: true})
+}, { timestamps: true })
 
-const ConnectionModel = model("connections",connectionSchema);
+connectionSchema.index({ fromUserId: 1, toUserId: 1 });
+
+connectionSchema.pre("save", function () {
+    if (this.fromUserId.equals(this.toUserId)) {
+        throw new Error("Error: Cannot connect to yourself !!")
+    }
+})
+
+const ConnectionModel = model("connections", connectionSchema);
 
 module.exports = ConnectionModel;

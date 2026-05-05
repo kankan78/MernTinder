@@ -23,7 +23,7 @@ const authMiddleware = async(req, res, next) => {
     req.user = user;
     next();
   } catch {
-    res.status(400).json({ Error: "Invalid token" });
+    res.status(400).json({ Error: "Invalid token ! User not Logged In" });
   }
 };
 
