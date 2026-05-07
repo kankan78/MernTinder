@@ -4,7 +4,7 @@ const { validateProfileData } = require("../utils/validations");
 const router = require("express").Router();
 
 /**Get User data by email */
-router.get("/get", authMiddleware, async (req, res) => {
+router.get("/view", authMiddleware, async (req, res) => {
     // const { id,email } = req.body;
 
     try {
