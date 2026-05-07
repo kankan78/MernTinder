@@ -2,3 +2,4 @@
 temp/
 node_modules
 *.lock
+config/mongoDb.js
