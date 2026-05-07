@@ -9,7 +9,7 @@ connectionsRouter.post("/send/:status/:toUserId", authMiddleware, async (req, re
         const { toUserId, status } = req.params;
         const fromUserId = req.user._id;
 
-        const validStatusTypes = ["interested", "ignore"];
+        const validStatusTypes = ["interested", "ignored"];
 
         if (!validStatusTypes.includes(status)) {
             throw new Error("Invalid Status type !!")
@@ -46,7 +46,7 @@ connectionsRouter.post("/send/:status/:toUserId", authMiddleware, async (req, re
         })
 
     } catch (error) {
-        res.status(400).send("Error: " + error.message)
+        res.status(401).send("Error: " + error.message)
     }
 })
 
@@ -78,7 +78,7 @@ connectionsRouter.post("/receive/:status/:requestId", authMiddleware, async (req
             message: "Connection Success as " + status, data: connection
         })
     }catch(error){
-        res.status(400).send("Error: " + error.message);
+        res.status(401).send("Error: " + error.message);
     }
 })
 

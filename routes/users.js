@@ -21,7 +21,7 @@ userRouter.get("/requests/received", authMiddleware, async (req, res) => {
         })
 
     } catch (error) {
-        res.status(400).send("Error: " + error.message)
+        res.status(401).send("Error: " + error.message)
     }
 })
 
@@ -100,7 +100,7 @@ userRouter.get("/feed", authMiddleware, async (req, res) => {
 
         res.status(200).json({
             message:"Fetched Successfully",
-            feedUsers
+            data:feedUsers
         })
 
     } catch (error){

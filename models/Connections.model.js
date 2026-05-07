@@ -15,8 +15,8 @@ const connectionSchema = new Schema({
         type: String,
         required: true,
         enum: {
-            values: ["accepted", "rejected", "ignore", "interested"],
-            message: `{Value} is incorrect status type`
+            values: ["accepted", "rejected", "ignored", "interested"],
+            message: `{value} is incorrect status type`
         }
     }
 }, { timestamps: true })
