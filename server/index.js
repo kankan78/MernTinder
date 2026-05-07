@@ -22,8 +22,8 @@ app.use(cookieParser())
 
 app.use("/request",connectionsRouter);
 app.use("/profile",profileRouter);
-app.use("/auth",authRouter);
-app.use("/user",userRouter);
+app.use("/",authRouter);
+app.use("/",userRouter);
 
 /**Get All user */
 app.get("/user/all", authMiddleware,async (req,res)=>{
