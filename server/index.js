@@ -17,7 +17,11 @@ const userRouter = require("../routes/users");
 
 app.use(express.json());
 app.use(cookieParser())
-// app.use(cors())
+app.use(cors({
+    origin: "http://localhost:5174",
+    credentials: true,
+  })
+)
 // app.use(authMiddleware)
 
 app.use("/request",connectionsRouter);

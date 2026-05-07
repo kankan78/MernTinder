@@ -1,7 +1,7 @@
 import validator from "validator";
 
 export const validateUserData = (req) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, emailId, password } = req.body;
 
     if (!firstName || !lastName) {
         throw new Error("firstName and lastName is Mandatory")
@@ -11,7 +11,7 @@ export const validateUserData = (req) => {
         throw new Error("firstName must be between 4 & 50")
     }
 
-    else if (!(validator.isEmail(email))) {
+    else if (!(validator.isEmail(emailId))) {
         throw new Error("Email is not Valid")
     }
 
@@ -23,7 +23,7 @@ export const validateUserData = (req) => {
 export const validateProfileData = (req) => {
     const fields = req.body;
 
-    const validEditFields = new Set(["firstName", "lastName","emailId","photoUrl","age","skills"]);
+    const validEditFields = new Set(["firstName", "lastName","photoUrl","age","skills","gender","about"]);
 
     for(let key in fields){
         if(!(validEditFields.has(key))){

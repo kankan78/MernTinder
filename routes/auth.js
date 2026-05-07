@@ -10,11 +10,11 @@ const SECRET_KEY = "DEV@Tinder$790";
 //Register
 authRouter.post("/signup", async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, emailId, password } = req.body;
     // Validations
     validateUserData(req);
 
-    const userCheck = await UserModel.findOne({ email: email })
+    const userCheck = await UserModel.findOne({ emailId })
     if (userCheck) {
       throw new Error("User already present")
     }
@@ -24,7 +24,7 @@ authRouter.post("/signup", async (req, res) => {
       firstName: firstName,
       lastName: lastName,
       password: hashPassword,
-      email: email
+      emailId: emailId
     });
 
     const savedUser = await newUser.save();
@@ -42,15 +42,15 @@ authRouter.post("/signup", async (req, res) => {
 //Login
 authRouter.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { emailId, password } = req.body;
 
-    if (!email || !password) {
-      throw new Error("Invalid Credentials")
+    if (!emailId || !password) {
+      throw new Error("Invalid Credentials , emailId , password missing")
     }
 
-    const user = await UserModel.findOne({ email: email });
+    const user = await UserModel.findOne({ emailId });
     if (!user) {
-      throw new Error("Invalid Credentials")
+      throw new Error("Invalid Credentials , No user found")
     }
 
     if (user && user.validatePassword(user.password)) {
@@ -61,11 +61,11 @@ authRouter.post("/login", async (req, res) => {
 
       res.status(200).send("Logged In Successfully")
     } else {
-      res.status(404).send("Invalid Credentials")
+      res.status(404).send("Invalid Credentials , invalid password")
     }
 
   } catch (e) {
-    res.status(500).send("Invalid Credentials")
+    res.status(500).send("Invalid Credentials" + e.message)
   }
 });
 
